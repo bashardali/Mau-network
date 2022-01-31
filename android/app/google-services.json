@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "222669384849",
+    "project_id": "mau-network",
+    "storage_bucket": "mau-network.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222669384849:android:35c755d64ebe632c51a330",
+        "android_client_info": {
+          "package_name": "mau.mau.mau"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222669384849-f2ntgmihtrkd8evrlkl00r2d05cji7v1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mau.mau.mau",
+            "certificate_hash": "2e557dbdcee62a8d7d157be5e1b0ddde5a015c35"
+          }
+        },
+        {
+          "client_id": "222669384849-g8bgonshs5lao9cbvtsq66ggot900b9n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmLt2p6NpLi0v0nAUoVlCA5pKepXoz5nc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "222669384849-g8bgonshs5lao9cbvtsq66ggot900b9n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
