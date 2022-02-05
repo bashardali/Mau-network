@@ -13,8 +13,6 @@ class Homecontroller extends GetxController {
  // late final  RxInt eygpound;
  //double eygpound = 0  ;
 
-
-
   String username= 'username';
 
   // void getuserdata() async{

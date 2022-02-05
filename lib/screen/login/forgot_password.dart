@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mau/screen/login/login.dart';
 import 'package:mau/screen/login/sign_up.dart';
+import 'package:mau/screen/login/signup3.dart';
 
 import 'package:mau/widget/form/formContent.dart';
 import 'package:mau/widget/form/formEmailTextField.dart';
@@ -92,7 +93,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation1, animation2) =>
-                                    SignUp(),
+                                    SignUp3(),
                                 transitionDuration: Duration(seconds: 0)),
                                 (route) => false);
                       },

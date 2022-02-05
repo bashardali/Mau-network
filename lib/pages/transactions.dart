@@ -46,8 +46,8 @@ class _TransactionsState extends State<Transactions> {
          appBar: AppBar(
            elevation: 0,
            backgroundColor: Colors.black87,
-          leading: Text("Transactions", style: TextStyle(color: Colors.white,fontSize: 20, fontWeight: FontWeight.bold),),
-           leadingWidth: 120,
+         // leading: Text("Transactions", style: TextStyle(color: Colors.white,fontSize: 20, fontWeight: FontWeight.bold),),
+          // leadingWidth: 120,
            title: Text("Total Balance \n ${balance} Mau", style: TextStyle(color: Colors.white),),
          centerTitle: true,
 

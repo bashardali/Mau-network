@@ -7,7 +7,7 @@ import 'package:mau/pages/home.dart';
 import 'package:mau/pages/team.dart';
 import 'package:mau/pages/transactions.dart';
 import 'package:mau/screen/login/login.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,6 +26,7 @@ class _ProfileState extends State<Profile> {
   late String username ;
   late String useremail;
 
+
    int selectindex = 3;
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
   var arguments = ModalRoute.of(context)!.settings.arguments;
   Map? map = arguments as Map?;
+  print("=================profile====================");
   print(arguments);
    print(arguments!['email']);
    balance=arguments['balance'] ;
@@ -102,11 +104,43 @@ class _ProfileState extends State<Profile> {
                 Text("Follow Us on Social Media" , style: TextStyle( fontSize: 15,), ),
                 Row(
                   children: [
-                    Expanded(child: InkWell(onTap: (){},child: Image(image:AssetImage('images/icons8-facebook.png'),width: 36,height: 48,))),
-                    Expanded( child:InkWell(child: Image(image:AssetImage('images/instagram.jpg'),width: 36,height: 48,)) ,),
-                    Expanded(child:InkWell(onTap: (){}, child: Image(image:AssetImage('images/icons8-telegram.png'),width: 36,height: 48,))),
-                    Expanded(child: InkWell(onTap: (){},child: Image(image:AssetImage('images/icons8-twitter.png'),width: 36,height: 48,))),
-                    Expanded( child: InkWell(onTap: (){},child: Image(image:AssetImage('images/icons8-youtube.png'),width: 36,height: 48,)) ,)
+                    Expanded(child: InkWell(onTap: () async{
+                      const url = 'https://www.facebook.com/egymautoken/';
+                      if (await canLaunch(url)) {
+                      await launch(url);
+                      } else {
+                      throw 'Could not launch $url';
+                      }
+                    },child: Image(image:AssetImage('images/icons8-facebook.png'),width: 36,height: 48,))),
+                    Expanded( child:InkWell( onTap: () async{
+                    const url = 'https://www.instagram.com/mau_token/';
+                     if (await canLaunch(url)) {
+                           await launch(url);
+                              } else {
+                        throw 'Could not launch $url';
+                    }}
+                    ,child: Image(image:AssetImage('images/instagram.jpg'),width: 36,height: 48,)) ,),
+                    Expanded(child:InkWell(onTap: () async{
+                      const url = 'https://google.com';
+                      if (await canLaunch(url)) {
+                             await launch(url);
+                                    } else {
+                                         throw 'Could not launch $url';
+                    }}, child: Image(image:AssetImage('images/icons8-telegram.png'),width: 36,height: 48,))),
+                    Expanded(child: InkWell(onTap: () async{
+                                   const url = 'https://twitter.com/EgxMau';
+                                    if (await canLaunch(url)) {
+                                        await launch(url);
+                                                } else {
+                                    throw 'Could not launch $url';}
+  },child: Image(image:AssetImage('images/icons8-twitter.png'),width: 36,height: 48,))),
+                    Expanded( child: InkWell(onTap: ()async{
+                      const url = 'https://www.youtube.com/channel/UC0pJLVwYPF3FdsHJR5qK_7Q';
+                      if (await canLaunch(url)) {
+                      await launch(url);
+                      } else {
+                      throw 'Could not launch $url';}
+                    },child: Image(image:AssetImage('images/icons8-youtube.png'),width: 36,height: 48,)) ,)
 
 
                   ],
@@ -116,7 +150,7 @@ class _ProfileState extends State<Profile> {
                 ListTile(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius. circular(20.0)),
                   selected: true,
-                  leading: Text("Username " , style: TextStyle( fontSize: 20,), ),
+                  leading: Text("Username" , style: TextStyle( fontSize: 20,), ),
                   trailing:Text("${arguments['name']}" , style: TextStyle( fontSize: 15,), ) ,
                   selectedTileColor: Colors. grey[300],
 
@@ -130,14 +164,7 @@ class _ProfileState extends State<Profile> {
                   selectedTileColor: Colors. grey[300],
 
                 ),
-                SizedBox(height:5,),
-                ListTile(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius. circular(20.0)),
-                  selected: true,
-                  leading: Text("Apple verified " , style: TextStyle( fontSize: 20,), ),
-                  trailing: Icon(CommunityMaterialIcons.alert),
-                  selectedTileColor: Colors. grey[300],
-                ),
+
                 SizedBox(height:5,),
                 ListTile(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius. circular(20.0)),
@@ -172,30 +199,13 @@ class _ProfileState extends State<Profile> {
                 SizedBox(height:30,),
                 Text("About" , style: TextStyle( fontSize: 30,fontWeight: FontWeight.bold), ),
                 SizedBox(height:5,),
-                ListTile(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius. circular(20.0)),
-                  selected: true,
-                  leading: Text("Apple verified " , style: TextStyle( fontSize: 20,  color: Colors.black87), ),
-                  trailing: Icon( Icons.arrow_forward_ios , color: Colors.black87,),
 
-                  selectedTileColor: Colors. grey[300],
-                ),
-                SizedBox(height:5,),
                 ListTile(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius. circular(20.0)),
                   selected: true,
                   leading: Text("FAQ" , style: TextStyle( fontSize: 20,  color: Colors.black87), ),
                   trailing: Icon( Icons.arrow_forward_ios , color: Colors.black87,),
 
-
-                  selectedTileColor: Colors. grey[300],
-                ),
-                SizedBox(height:5,),
-                ListTile(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius. circular(20.0)),
-                  selected: true,
-                  leading: Text("Roles" , style: TextStyle( fontSize: 20,  color: Colors.black87), ),
-                  trailing: Icon( Icons.arrow_forward_ios , color: Colors.black87,),
 
                   selectedTileColor: Colors. grey[300],
                 ),
@@ -291,5 +301,14 @@ class _ProfileState extends State<Profile> {
         ),
       );
 
+  }
+}
+
+_launchURL() async {
+  const url = 'https://flutter.io';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }

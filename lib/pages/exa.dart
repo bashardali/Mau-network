@@ -1,17 +1,14 @@
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:mau/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mau/pages/loading.dart';
 class Example extends StatefulWidget {
-  //const Example({Key? key}) : super(key: key);
-  final int balance ;
-  final  int speed;
-  final String username;
-  final String useremail;
-  const  Example(this.username,this.useremail,this.balance , this.speed);
+  const Example({Key? key}) : super(key: key);
   @override
   _ExampleState createState() => _ExampleState();
 }
-
+int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 60*60*24;
 class _ExampleState extends State<Example> {
   @override
   Widget build(BuildContext context) {
@@ -19,8 +16,22 @@ class _ExampleState extends State<Example> {
       appBar: AppBar(),
       body: Column(
         children: [
+
+      CountdownTimer(
+      endTime: endTime,
+        onEnd: (){
+         Get.off(Loading());
+        },
+      textStyle: TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+
+
+
+      ),
+    ),
           ElevatedButton(onPressed: (){
-            Get.to(Home());
+
           }, child: Icon(Icons.add , size: 40,))
         ],
       ),

@@ -60,6 +60,7 @@ class _SignUp3State extends State<SignUp3> {
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (context) {
             addUser();
+           addSession();
             return Loading();
           } ), (route) => false);
     } on FirebaseAuthException catch (e) {
@@ -85,8 +86,30 @@ class _SignUp3State extends State<SignUp3> {
     }
   }
 //========================================================
+  DateTime startTime = DateTime.now();
+  DateTime endTime = DateTime.now().add(Duration(hours: 24));
+
   CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference session = FirebaseFirestore.instance.collection('sessions');
   final FirebaseAuth auth = FirebaseAuth.instance;
+  Future<void> addSession() {
+    final User? user = auth.currentUser;
+    final uid = user!.uid;
+
+    print('this is $uid');
+    // Call the user's CollectionReference to add a new user
+    return session
+        .add({
+
+      'id':  uid,
+      'sessionid': 0,
+      'starttime':startTime ,
+      'endtime': endTime,
+
+    })
+        .then((value) => print("Session Added"))
+        .catchError((error) => print("Failed to add Session: $error"));
+  }
   Future<void> addUser() {
     final User? user = auth.currentUser;
     final uid = user!.uid;
@@ -102,11 +125,6 @@ class _SignUp3State extends State<SignUp3> {
       'mauspeed': 1000,
       'prem': false,
      // 'referrel':null
-
-
-
-
-      //
     })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));

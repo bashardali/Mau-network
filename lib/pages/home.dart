@@ -1,7 +1,7 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:mau/controllers/homecontroller.dart';
 import 'package:mau/controllpanel/panel.dart';
 import 'package:mau/pages/earnings.dart';
@@ -39,96 +39,181 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  // index of nav tabs
+  int  selectindex = 0;
   List users = [];
+  List sessions = [];
+  // users table vars
+
   late int balance ;
   late int speed ;
   late String username;
   late String useremail;
+  late var eygpound;
+  late bool prem;
   bool isloading = false;
-   getdata1() async{
-     CollectionReference useref = FirebaseFirestore.instance.collection('users');
-
-     await useref.where('id', isEqualTo : FirebaseAuth.instance.currentUser?.uid).get().then((value){
-       value.docs.forEach((element) {
-         setState(() {
-           users.add(element.data());
-           print('***************************************************');
-           print(users[0]['username']);
-           print(users[0]['email']);
-           print(users[0]['prem']);
-           print(users[0]['maus']);
-           print(users[0]['eygpound']);
-           print(users[0]['mauspeed']);
-           balance = users[0]['maus'] ;
-           speed =users[0]['mauspeed'];
-           username =users[0]['username'];
-           useremail= users[0]['email'];
-           print('***************************************************');
-
-         });
-
-
-       });
-     });
-   }
-
-  //  double balance =0 ;
-    //int speed =0;
-
-  double i = 00.00;
-  int  selectindex = 0;
-  List<RateCut> getchartdata = getdata();
-  //circular slider المتحولات الخاصة ب
-  final baseColor = Color.fromRGBO(255, 255, 255, 0.3);
-
-  late int initTime ;
-  late int endTime ;
-
-  late int inBedTime ;
-  late int outBedTime ;
-  int days = 0;
-  /////////////////////// التوابع الخاصة بال السلايدر
-  int  generateRandomTime(){
-    Random random = new Random();
-    int randomNumber = random.nextInt(100);
-    return randomNumber;
+  // method to get the document id  in the table users by current user id
+  void getdocuserid() async {
+    CollectionReference userf = FirebaseFirestore.instance.collection('users');
+    var docset =  await userf.where('id', isEqualTo : FirebaseAuth.instance.currentUser?.uid).get();
+    var  document = docset.docs.single;
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+    print('id =================$uid');
+    print(document.id);
+    print('document id ${document.id} ');
   }
+  // method to update users table by getting old data and update all the document and adding new value to the maus
+  update_mau() async{
+    CollectionReference userf = FirebaseFirestore.instance.collection('users');
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+    print('id =================$uid');
+    var docset =  await userf.where('id', isEqualTo : FirebaseAuth.instance.currentUser?.uid).get();
+    var name;
+    var email;
+    var eygpound;
+    var mauspeed;
+    var prem ;
+    var maus;
+    await userf.where('id', isEqualTo : FirebaseAuth.instance.currentUser?.uid).get().then((value){
+      value.docs.forEach((element) {
+        name= element['name'];
+        email =element['email'];
+        eygpound = element['eygpound'];
+        prem = element['prem'];
+        maus = element['maus'];
+        mauspeed = element['mauspeed'];
 
-  void _shuffle() {
-    setState(() {
 
-     // initTime = generateRandomTime();
-      initTime = 0;
-      endTime =  generateRandomTime();
-      inBedTime = initTime;
-      outBedTime = endTime;
+
+      });
+    } );
+
+
+    var  document = docset.docs.single;
+    String documentid = document.id;
+    await userf.doc('$documentid').set(
+      {
+        'name':name,
+        'email':email,
+        'eygpound':eygpound,
+        'maus':maus+ speed,
+        'mauspeed': speed,
+        'id': uid,
+        'prem':prem
+
+      },
+
+
+    );
+
+
+  }
+  // get data from users table
+  getdata1() async{
+    CollectionReference useref = FirebaseFirestore.instance.collection('users');
+
+    await useref.where('id', isEqualTo : FirebaseAuth.instance.currentUser?.uid).get().then((value){
+      value.docs.forEach((element) {
+        setState(() {
+          users.add(element.data());
+          print('***************************************************');
+          print(users[0]['name']);
+          print(users[0]['email']);
+          print(users[0]['prem']);
+          print(users[0]['maus']);
+          print(users[0]['eygpound']);
+          print(users[0]['mauspeed']);
+          balance = users[0]['maus'] ;
+          speed =users[0]['mauspeed'];
+          username =users[0]['name'];
+          useremail= users[0]['email'];
+          print('***************************************************');
+
+        });
+
+
+      });
     });
   }
+  // sessions table vars
+  late  DateTime starttime;
+  late  DateTime endtime;
+  late int sessionid ;
+  late int start;
+  late int end;
+  late int countertime;
 
-  void _updateLabels(int init, int end, int laps) {
-    setState(() {
-      inBedTime = 0;
-      outBedTime = end;
-      days = laps;
+
+  // method to get document from sessions table by current user id
+  void getdocsessionid() async {
+    CollectionReference userf = FirebaseFirestore.instance.collection('sessions');
+    var docset =  await userf.where('id', isEqualTo : FirebaseAuth.instance.currentUser?.uid).get();
+    var  document = docset.docs.single;
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+    print('id =================$uid');
+    print(document.id);
+    print('document id ${document.id} ');
+  }
+  // method to get session id
+  getsessiondata() async{
+    CollectionReference session = FirebaseFirestore.instance.collection('sessions');
+
+    await session.where('id', isEqualTo : FirebaseAuth.instance.currentUser?.uid).get().then((value){
+      value.docs.forEach((element) {
+        setState(() {
+          sessions.add(element.data());
+          print('***************************************************');
+          print(sessions[0]['id']);
+          print(sessions[0]['starttime']);
+          print(sessions[0]['endtime']);
+          print(sessions[0]['sessionid']);
+
+          starttime = sessions[0]['starttime'];
+          start = starttime.year*12*30*24*60+starttime.month*30*24*60+ starttime.day * 24*60 + starttime.hour *60 + starttime.minute ;
+          endtime =sessions[0]['endtime'];
+          end =endtime.year*12*30*24*60+endtime.month*30*24*60+ endtime.day * 24*60 + endtime.hour *60 + endtime.minute ;
+          sessionid =sessions[0]['sessionid'];
+            DateTime now = DateTime.now();
+
+           int countertime   = now.year*12*30*24*60+now.month*30*24*60+ now.day * 24*60 + now.hour *60 + now.minute ;
+           countertime = end - countertime;
+          countertime = countertime*60;
+          print('***************************************************');
+        });
+
+
+      });
     });
   }
-  String percentageModifier(double value) {
-    final roundedValue = value.ceil().toInt().toString();
-    return '$roundedValue';
-  }
-  @override
+ int endTime1 = DateTime.now().millisecondsSinceEpoch + 1000 * 60*60*24;
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
+
+
+
+
+
 
 
   @override
   void initState() {
     getdata1();
+    getsessiondata();
     super.initState();
   }
+  @override
+
+
+  void activate() {
+
+    // TODO: implement activate
+    super.activate();
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    getsessiondata();
     CollectionReference useref = FirebaseFirestore.instance.collection('users');
 
     return
@@ -214,45 +299,63 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
 
+                    Center(
+                      child: CountdownTimer(
+                        endTime: countertime,
+
+                        onEnd: (){
+                          Get.off(Loading());
+                        },
+                        textStyle: TextStyle(
+                          fontSize: 40,
+                          inherit: true,
+
+                          fontWeight: FontWeight.bold,
+                          color: Colors.yellow.shade600
 
 
-                    Container(
-                      height: 160,
-                      width: double.infinity,
-                      color: Colors.yellowAccent.shade100,
-                      child:  SleekCircularSlider(
-                        appearance: CircularSliderAppearance(
-                          spinnerDuration: 60000,
-                          customWidths: CustomSliderWidths(progressBarWidth: 10),
-                          infoProperties: InfoProperties(
-                              topLabelStyle: TextStyle(
-                                  color: Colors.green, fontWeight: FontWeight.bold
-                              ),
-                              topLabelText: "balance",
-                              bottomLabelStyle: TextStyle(
-                                  color: Colors.green, fontWeight: FontWeight.bold
-                              ),
-                              bottomLabelText: "200"
-
-
-
-                          ),
-
-                          animationEnabled: true,
-                          spinnerMode: true,
-                          //counterClockwise: true
 
                         ),
-
-
-                        min: 0,
-                        max: 2400,
-                        initialValue: 0,
-
                       ),
-
-
                     ),
+
+                    // Container(
+                    //   height: 160,
+                    //   width: double.infinity,
+                    //   color: Colors.yellowAccent.shade100,
+                    //   child:  SleekCircularSlider(
+                    //     appearance: CircularSliderAppearance(
+                    //       spinnerDuration: 60000,
+                    //       customWidths: CustomSliderWidths(progressBarWidth: 10),
+                    //       infoProperties: InfoProperties(
+                    //           topLabelStyle: TextStyle(
+                    //               color: Colors.green, fontWeight: FontWeight.bold
+                    //           ),
+                    //           topLabelText: "balance",
+                    //           bottomLabelStyle: TextStyle(
+                    //               color: Colors.green, fontWeight: FontWeight.bold
+                    //           ),
+                    //           bottomLabelText: "200"
+                    //
+                    //
+                    //
+                    //       ),
+                    //
+                    //       animationEnabled: true,
+                    //       spinnerMode: true,
+                    //       //counterClockwise: true
+                    //
+                    //     ),
+                    //
+                    //
+                    //     min: 0,
+                    //     max: 2400,
+                    //     initialValue: 0,
+                    //
+                    //   ),
+                    //
+                    //
+                    // ),
 
                     ///// CAT HEAD
                     InkWell(
@@ -308,14 +411,8 @@ class _HomeState extends State<Home> {
 
                         child: MaterialButton(
                           onPressed: (){
-                            var data = {
-                              "email" : useremail,
-                              "name" : username,
-                              "balance" : balance,
-                              "speed" : speed
-
-                            };
-                            Navigator.pushNamed(context, '/transactions', arguments: data);
+                           update_mau();
+                           // getdocid();
                             // getdata1();
                             // Get.to (()=>Loading());
                           },
@@ -473,6 +570,14 @@ class _HomeState extends State<Home> {
                               ),
 
                               //    SizedBox(width: 10,),
+
+
+
+                            ],
+                          ),
+                          SizedBox(height: 20,),
+                          Row(
+                            children: [
                               Expanded(
                                 child: Column(
                                   children: [
@@ -481,13 +586,6 @@ class _HomeState extends State<Home> {
                                   ],
                                 ),
                               ),
-
-
-                            ],
-                          ),
-                          SizedBox(height: 20,),
-                          Row(
-                            children: [
                               Expanded(
                                 child:  Column(
                                   children: [
@@ -498,16 +596,7 @@ class _HomeState extends State<Home> {
                               ),
 
                               //  SizedBox(width: 10,),
-                              Expanded(
-                                child: Column(
-                                  children: [
 
-                                    SizedBox(width: 10,),
-                                    ClipOval(child: Container(color: Colors.blueGrey,child: IconButton(onPressed: (){}, icon: Icon(CommunityMaterialIcons.nintendo_game_boy , color: Colors.white ,size: 30,) , ))),
-                                    Text('game')
-                                  ],
-                                ),
-                              ),
 
                               //SizedBox(width: 10,),
                               Expanded(
@@ -520,14 +609,6 @@ class _HomeState extends State<Home> {
                               ),
 
                               //    SizedBox(width: 10,),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    ClipOval(child: Container(color: Colors.red,child: IconButton(onPressed: (){}, icon: Icon(CommunityMaterialIcons.heart , color: Colors.white ,size: 30,) , ))),
-                                    Text('Team')
-                                  ],
-                                ),
-                              ),
 
 
                             ],
@@ -536,62 +617,62 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     // STATICS FOR APP USERS
-                    Container(
-                      //  padding: EdgeInsets.all(20),
-                      margin:  EdgeInsets.all(20) ,
-                      // color: Colors.white,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Image(image: AssetImage('images/Lazy_Cat_Sleeping_cat_transparent_by_Icons8.gif'),width: 60 , height: 60,),
-                              Text('First 50% RAT CUT!' , style: TextStyle( fontSize: 30 ,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.yellow.shade600),)
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 25,),
-                              Text('10M MUE Visitors Reached!', style: TextStyle( fontSize: 20 ,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.yellow.shade600),)
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 25,),
-                              Text('Another 50% cut when users reached!', style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey),)
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 25,),
-                              Text('Mine more before it is halved.')
-                            ],
-                          ),
-                          // the statics liner charts
-                          SfCartesianChart(
-                            series:<ChartSeries>[
-
-                              LineSeries<RateCut,double>(dataSource: getchartdata,
-                                  xValueMapper: (RateCut users,_) => users.totalusers,
-                                  yValueMapper:(RateCut users,_) => users.baserate,
-                                  xAxisName: "Base Rate",
-                                  yAxisName: "Total Users")
-                            ],
-                            primaryXAxis: NumericAxis(edgeLabelPlacement: EdgeLabelPlacement.shift),
-                            primaryYAxis: NumericAxis(
-                                numberFormat: NumberFormat.simpleCurrency(decimalDigits: 0)
-                            ),),
-
-
-                        ],
-
-                      ),
-                    ),
+                    // Container(
+                    //   //  padding: EdgeInsets.all(20),
+                    //   margin:  EdgeInsets.all(20) ,
+                    //   // color: Colors.white,
+                    //   child: Column(
+                    //     children: [
+                    //       Row(
+                    //         children: [
+                    //           Image(image: AssetImage('images/Lazy_Cat_Sleeping_cat_transparent_by_Icons8.gif'),width: 60 , height: 60,),
+                    //           Text('First 50% RAT CUT!' , style: TextStyle( fontSize: 30 ,
+                    //               fontWeight: FontWeight.bold,
+                    //               color: Colors.yellow.shade600),)
+                    //         ],
+                    //       ),
+                    //       Row(
+                    //         children: [
+                    //           SizedBox(width: 25,),
+                    //           Text('10M MUE Visitors Reached!', style: TextStyle( fontSize: 20 ,
+                    //               fontWeight: FontWeight.bold,
+                    //               color: Colors.yellow.shade600),)
+                    //         ],
+                    //       ),
+                    //       Row(
+                    //         children: [
+                    //           SizedBox(width: 25,),
+                    //           Text('Another 50% cut when users reached!', style: TextStyle(
+                    //               fontWeight: FontWeight.bold,
+                    //               color: Colors.grey),)
+                    //         ],
+                    //       ),
+                    //       Row(
+                    //         children: [
+                    //           SizedBox(width: 25,),
+                    //           Text('Mine more before it is halved.')
+                    //         ],
+                    //       ),
+                    //       // the statics liner charts
+                    //       SfCartesianChart(
+                    //         series:<ChartSeries>[
+                    //
+                    //           LineSeries<RateCut,double>(dataSource: getchartdata,
+                    //               xValueMapper: (RateCut users,_) => users.totalusers,
+                    //               yValueMapper:(RateCut users,_) => users.baserate,
+                    //               xAxisName: "Base Rate",
+                    //               yAxisName: "Total Users")
+                    //         ],
+                    //         primaryXAxis: NumericAxis(edgeLabelPlacement: EdgeLabelPlacement.shift),
+                    //         primaryYAxis: NumericAxis(
+                    //             numberFormat: NumberFormat.simpleCurrency(decimalDigits: 0)
+                    //         ),),
+                    //
+                    //
+                    //     ],
+                    //
+                    //   ),
+                    // ),
                     // news
                     SizedBox(height: 20,),
                     Column(
@@ -677,8 +758,9 @@ class _HomeState extends State<Home> {
                 "name" : username,
                 "balance" : balance,
                 "speed" : speed
-
               };
+              print("=================home to profile====================");
+              print(data);
               Navigator.pushNamed(context, '/profile', arguments: data);
             }
             selectindex = index ;

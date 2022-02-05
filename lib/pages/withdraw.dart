@@ -80,7 +80,7 @@ class _WithdrawState extends State<Withdraw> {
                           TextFormField(
                             autofocus: false,
                             controller: passwordController,
-                            keyboardType: TextInputType.visiblePassword,
+                            //keyboardType: TextInputType.visiblePassword,
                             inputFormatters: [],
                             autofillHints: [AutofillHints.password],
                             validator: (value) {
@@ -94,14 +94,7 @@ class _WithdrawState extends State<Withdraw> {
                             // obscureText: pr.obscureText,
                             decoration: InputDecoration(
                               hintText: 'EX:0xfaB98B45593E94C2513Ba028C43187fd6E3453Ed',
-                              suffixIcon: IconButton(
 
-                                onPressed: (){},
-                                icon: Icon(
-                                  Icons.remove_red_eye_sharp,
-                                  color: Colors.brown,
-                                ),
-                              ),
                               labelText: "please enter your Bsc Address",
                               labelStyle: TextStyle(fontSize: 17, color: Colors.amber),
                               errorStyle: TextStyle(color: Colors.black26),

@@ -4,8 +4,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mau/pages/home.dart';
 import 'package:mau/pages/loading.dart';
 //import 'package:mau/pages/loading.dart';
-import 'package:mau/pages/register.dart';
-
 import 'package:mau/screen/login/forgot_password.dart';
 import 'package:mau/screen/login/sign_up.dart';
 import 'package:mau/screen/login/signup3.dart';
